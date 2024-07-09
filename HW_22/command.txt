@@ -1,4 +1,6 @@
-git clone
-git init
-git pull
+terraform init
+terraform plan
+terraform apply
+terraform destroy
+
 
