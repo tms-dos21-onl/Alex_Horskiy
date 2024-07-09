@@ -38,5 +38,5 @@ variable "machine_type" {
 variable "image" {
   description = "Disk image for the instances"
   type        = string
-  default     = "debian-cloud/debian-10"
+  default     = "debian-cloud/debian-11"
 }
