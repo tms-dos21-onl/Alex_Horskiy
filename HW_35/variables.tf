@@ -26,7 +26,7 @@ variable "subnets" {
 variable "zones" {
   description = "List of zones for the instances"
   type        = list(string)
-  default     = ["us-central1-a", "us-central1-b", "us-central1-c"]
+  default     = ["us-central1-a", "us-central1-b", "us-central1-c", "us-central1-f"]
 }
 
 variable "machine_type" {
