@@ -1,0 +1,9 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "google_compute_instance.vm_instances" [label="google_compute_instance.vm_instances"];
+  "google_compute_network.vpc_network" [label="google_compute_network.vpc_network"];
+  "google_compute_subnetwork.subnetworks" [label="google_compute_subnetwork.subnetworks"];
+  "google_compute_instance.vm_instances" -> "google_compute_subnetwork.subnetworks";
+  "google_compute_subnetwork.subnetworks" -> "google_compute_network.vpc_network";
+}
