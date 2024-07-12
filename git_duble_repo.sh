@@ -2,8 +2,8 @@
 
 # Checking the presence of an argument for a commit comment
 if [ -z "$1" ]; then
-    echo "Ошибка: Необходимо ввести комментарий для коммита."
-    echo "Использование: $0 \"Комментарий для коммита\""
+    echo "Error: Need to enter a comment for commit."
+    echo "Usage: $0 \"Comment for commit\""
     exit 1
 fi
 

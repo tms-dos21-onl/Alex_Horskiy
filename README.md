@@ -1,4 +1,5 @@
 # Alex_Horskiy
+# We are DevOps engeneers. We make the world better.
 
 Чтоб жизнь прожить узнать нужно не мало
 Запомни пару правил для начала:
