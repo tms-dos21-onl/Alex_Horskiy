@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Проверка наличия аргумента для комментария коммита
+# Checking the presence of an argument for a commit comment
 if [ -z "$1" ]; then
     echo "Ошибка: Необходимо ввести комментарий для коммита."
     echo "Использование: $0 \"Комментарий для коммита\""
@@ -9,11 +9,12 @@ fi
 
 commit_message=$1
 
-# Добавление всех изменений в индекс
+# Add all changes to the index
 git add .
 
-# Создание коммита с указанным комментарием
+# Create commit with the specified comment
 git commit -m "$commit_message"
+
 # List repo
 repos=("git@github.com:tms-dos21-onl/Alex_Horskiy.git" "git@github.com:Horskiy/Alex_Horskiy.git")
 
