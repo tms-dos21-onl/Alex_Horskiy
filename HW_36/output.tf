@@ -1,12 +1,7 @@
-output "network_name" {
-  value = google_compute_network.vpc_network.name
-}
-
-output "subnetworks" {
-  value = google_compute_subnetwork.subnetworks[*].name
-}
-
 output "instance_names" {
-  value = google_compute_instance.vm_instances[*].name
+  value = [for vm in module.vm_instances : vm.instance_name]
 }
 
+output "ip_addresses" {
+  value = join(", ", [for vm in module.vm_instances : vm.nat_ip])
+}

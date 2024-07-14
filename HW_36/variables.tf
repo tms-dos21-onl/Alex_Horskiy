@@ -1,35 +1,42 @@
 variable "machine_type" {
-  description = "Тип/размер виртуальной машины"
+  description = "Type/size of virtual machine"
   type        = string
 }
 
 variable "zone" {
-  description = "Название availability zone"
-  type        = string
+  description = "Name availability zone"
+  type        = list
 }
 
 variable "enable_public_ip" {
-  description = "Создание публичного IP адреса"
+  description = "Boolean variable regulating creation of public IP address"
   type        = bool
+  default     = false
 }
 
 variable "image_family" {
-  description = "Семейство образа виртуальной машины"
+  description = "Virtual Machine Image Collection"
   type        = string
 }
 
 variable "image_project" {
-  description = "Проект образа виртуальной машины"
+  description = "Virtual machine image project"
   type        = string
 }
 
 variable "project_id" {
-  description = "ID проекта в GCP"
+  description = "GCP Project ID"
   type        = string
 }
 
 variable "region" {
-  description = "Регион в GCP"
+  description = "GCP Region"
   type        = string
+  default     = "us-central1"
 }
 
+variable "delay" {
+  description = "The delay duration before creating the instance"
+  type        = string
+  default     = "20s"
+}
