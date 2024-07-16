@@ -25,4 +25,3 @@ for repo in "${repos[@]}"; do
     echo "Pushing to $repo..."
     git push "$repo" "$branch"
 done
-
