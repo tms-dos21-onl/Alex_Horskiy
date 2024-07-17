@@ -1,15 +1,18 @@
 resource "google_compute_instance_template" "clinic_template" {
   name = "clinic-template"
   machine_type = var.machine_type
+
   network_interface {
     network = var.network_name
     access_config {}
   }
-  disks {
+
+  disk {
     boot         = true
     auto_delete  = true
     source_image = "projects/debian-cloud/global/images/family/debian-11"
   }  
+
   metadata_startup_script = <<-SCRIPT
     #!/bin/bash
 
@@ -34,35 +37,33 @@ resource "google_compute_instance_template" "clinic_template" {
     sudo apt install build-essential default-libmysqlclient-dev pkg-config python3.11-dev python3.11-venv -y
 
   #Create DIR
-    mkdir -p ${DIR_PORTAL} ${DIR_CLINIC}
+    mkdir -p \$DIR_PORTAL \$DIR_CLINIC
 
   #Download files
-    wget -P ${DIR_PORTAL} ${URL_PATIENT}
-    wget -P ${DIR_CLINIC} ${URL_CLINIC}
+    wget -P \$DIR_PORTAL \$URL_PATIENT
+    wget -P \$DIR_CLINIC \$URL_CLINIC
 
   #Unzip files
-    cd ${DIR_PORTAL}
-    tar -xzvf ${TAR_FILE_P}
-    cd $(basename ${TAR_FILE_P} .tar.gz)
+    cd \$DIR_PORTAL
+    tar -xzvf \$TAR_FILE_P
+    cd $(basename \$TAR_FILE_P .tar.gz)
 
-    cd ${DIR_CLINIC}
-    tar -xzvf ${TAR_FILE_C}
-    cd $(basename ${TAR_FILE_C} .tar.gz)
-
-  #sudo tar -xvf ${DIR_PORTAL}/Clinic.PatientPortal.1.1.3.tar.gz -C ${DIR_PORTAL}
-  #sudo tar -xvf ${DIR_CLINIC}/Clinic.Portal.1.1.3.tar.gz -C ${DIR_CLINIC}
+    cd \$DIR_CLINIC
+    tar -xzvf \$TAR_FILE_C
+    cd $(basename \$TAR_FILE_C .tar.gz)
 
   #Config MySQL
     systemctl start mysql
     systemctl enable mysql
-    mysql -u root -e "CREATE DATABASE ${DB_NAME};"
-    mysql -u root -e "CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
-    mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';"
+    mysql -u root -e "CREATE DATABASE \$DB_NAME;"
+    mysql -u root -e "CREATE USER '\$DB_USER'@'localhost' IDENTIFIED BY '\$DB_PASSWORD';"
+    mysql -u root -e "GRANT ALL PRIVILEGES ON \$DB_NAME.* TO '\$DB_USER'@'localhost';"
     mysql -u root -e "FLUSH PRIVILEGES;"
 
   #Config DB
     chmod +x .initdb.d/init_database.sh
     ./.initdb.d/init_database.sh
+
   #Create add activated virt oraund
     python3.11 -m venv .venv
     source .venv/bin/activate
@@ -71,27 +72,32 @@ resource "google_compute_instance_template" "clinic_template" {
     pip3 install -r requirements.txt
 
   #Config .env
-    cat <<EOT > ${DIR_PORTAL}/.env
-    DATABASE_NAME=${DB_NAME_P}
-    DATABASE_USER=${DB_USER_P}
-    DATABASE_PASSWORD=${DB_PASSWORD_P}
+    cat <<EOT > \$DIR_PORTAL}env
+    DATABASE_NAME=\$DB_NAME_P
+    DATABASE_USER=\$DB_USER_P
+    DATABASE_PASSWORD=\$DB_PASSWORD_P
     EOT
 
-    cat <<EOT > ${DIR_CLINIC}/.env
-    DATABASE_NAME=${DB_NAME_C}
-    DATABASE_USER=${DB_USER_C}
-    DATABASE_PASSWORD=${DB_PASSWORD_C}
+    cat <<EOT > \$DIR_CLINIC/.env
+    DATABASE_NAME=\$DB_NAME_C
+    DATABASE_USER=\$DB_USER_C
+    DATABASE_PASSWORD=\$DB_PASSWORD_C
     EOT
   SCRIPT
 }
 
-resource "google_compute_instance_group_manager" "clinic_instance_group" {
-  name = "clinic-instance-group"
-  base_instance_name = "clinic-instance"
-  instance_template = google_compute_instance_template.clinic_template.self_link
-  target_size = 1
-}
 
+resource "google_compute_instance_group_manager" "clinic_instance_group" {
+  name               = "clinic-instance-group"
+  base_instance_name = "clinic-instance"
+  instance_template  = google_compute_instance_template.default.id
+  target_size        = 2
+  zone               = var.zone
+
+  version {
+    instance_template = google_compute_instance_template.clinic_template.id
+  }
+}
 
 
 resource "google_compute_instance_template" "default" {
