@@ -19,6 +19,13 @@ module "patient_portal" {
   region       = var.region
 }
 
+resource "google_compute_health_check" "default" {
+  name = "health-check"
+  http_health_check {
+    port = 80
+  }
+}
+
 resource "google_compute_backend_service" "clinic_backend" {
   name                  = "clinic-backend"
   health_checks         = [google_compute_health_check.default.id]

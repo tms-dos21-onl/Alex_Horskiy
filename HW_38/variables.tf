@@ -1,5 +1,5 @@
 variable "project_id" {
-  description = "my-project-dos21"
+  description = "Prigect ID"
   type        = string
 }
 
@@ -8,3 +8,4 @@ variable "region" {
   type        = string
   default     = "us-central1"
 }
+

@@ -25,7 +25,3 @@ resource "google_compute_instance_group_manager" "patient_instance_group" {
   instance_template = google_compute_instance_template.patient_template.self_link
   target_size = 1
 }
-
-output "instance_group_ip" {
-  value = google_compute_instance_group_manager.patient_instance_group.instance_group
-}

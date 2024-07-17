@@ -1,6 +1,6 @@
 resource "google_compute_instance_template" "clinic_template" {
   name = "clinic-template"
-  machine_type = "e2-medium"
+  machine_type = var.machine_type
   network_interface {
     network = var.network_name
     access_config {}
@@ -10,10 +10,9 @@ resource "google_compute_instance_template" "clinic_template" {
     auto_delete  = true
     source_image = "projects/debian-cloud/global/images/family/debian-11"
   }  
-  metadata_startup_script = <<-EOF
+  metadata_startup_script = <<-SCRIPT
     #!/bin/bash
 
-  #Install Variable
     URL_PATIENT="https://github.com/tms-dos21-onl/_sandbox/releases/download/1.1.3/Clinic.PatientPortal.1.1.3.tar.gz"
     URL_CLINIC="https://github.com/tms-dos21-onl/_sandbox/releases/download/1.1.3/Clinic.Portal.1.1.3.tar.gz"
     TAR_FILE_P="Clinic.PatientPortal.1.1.3.tar.gz"
@@ -35,39 +34,34 @@ resource "google_compute_instance_template" "clinic_template" {
     sudo apt install build-essential default-libmysqlclient-dev pkg-config python3.11-dev python3.11-venv -y
 
   #Create DIR
-    sudo mkdir -p ${DIR_PORTAL} ${DIR_CLINIC}
+    mkdir -p ${DIR_PORTAL} ${DIR_CLINIC}
 
   #Download files
-    sudo wget -P ${DIR_PORTAL} ${URL_PATIENT}
-    sudo wget -P ${DIR_CLINIC} ${URL_CLINIC}
+    wget -P ${DIR_PORTAL} ${URL_PATIENT}
+    wget -P ${DIR_CLINIC} ${URL_CLINIC}
 
   #Unzip files
     cd ${DIR_PORTAL}
-    sudo tar -xzvf ${TAR_FILE_P}
+    tar -xzvf ${TAR_FILE_P}
     cd $(basename ${TAR_FILE_P} .tar.gz)
 
     cd ${DIR_CLINIC}
-    sudo tar -xzvf ${TAR_FILE_C}
+    tar -xzvf ${TAR_FILE_C}
     cd $(basename ${TAR_FILE_C} .tar.gz)
 
   #sudo tar -xvf ${DIR_PORTAL}/Clinic.PatientPortal.1.1.3.tar.gz -C ${DIR_PORTAL}
   #sudo tar -xvf ${DIR_CLINIC}/Clinic.Portal.1.1.3.tar.gz -C ${DIR_CLINIC}
 
   #Config MySQL
-    sudo systemctl start mysql
-    sudo systemctl enable mysql
+    systemctl start mysql
+    systemctl enable mysql
     mysql -u root -e "CREATE DATABASE ${DB_NAME};"
     mysql -u root -e "CREATE USER '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
     mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost';"
     mysql -u root -e "FLUSH PRIVILEGES;"
 
-
-
-    // other commands to install and configure . NET application
-    EOF
-
   #Config DB
-    sudo chmod +x .initdb.d/init_database.sh
+    chmod +x .initdb.d/init_database.sh
     ./.initdb.d/init_database.sh
   #Create add activated virt oraund
     python3.11 -m venv .venv
@@ -88,7 +82,7 @@ resource "google_compute_instance_template" "clinic_template" {
     DATABASE_USER=${DB_USER_C}
     DATABASE_PASSWORD=${DB_PASSWORD_C}
     EOT
-    EOT
+  SCRIPT
 }
 
 resource "google_compute_instance_group_manager" "clinic_instance_group" {
@@ -135,8 +129,4 @@ resource "google_compute_instance_template" "default" {
     scopes = ["https://www.googleapis.com/auth/devstorage.read_only", "https://www.googleapis.com/auth/logging.write", "https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/pubsub", "https://www.googleapis.com/auth/service.management.readonly", "https://www.googleapis.com/auth/servicecontrol", "https://www.googleapis.com/auth/trace.append"]
   }
   tags = ["allow-health-check"]
-}
-
-output "instance_group_ip" {
-  value = google_compute_instance_group_manager.clinic_instance_group.instance_group
 }
