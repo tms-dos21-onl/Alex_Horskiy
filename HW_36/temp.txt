@@ -1,0 +1,15 @@
+resource "time_sleep" "instance_delay" {
+  # for_each     = toset(var.availability_zones)
+  count = length(var.availability_zones)
+  create_duration = var.delay * (count.index + 1)
+}
+resource "google_compute_instance" "main" {
+  # for_each     = toset(var.availability_zones)
+  count = length(var.availability_zones)
+  name         = "${each.key}-hw36ex3"
+  machine_type = var.machine_type
+  zone         = var.availability_zones[count.index]
+  depends_on = [
+    time_sleep.instance_delay[count.index]
+  ]
+}

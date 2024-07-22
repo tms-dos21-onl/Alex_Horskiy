@@ -90,12 +90,13 @@ resource "google_compute_instance_template" "clinic_template" {
 resource "google_compute_instance_group_manager" "clinic_instance_group" {
   name               = "clinic-instance-group"
   base_instance_name = "clinic-instance"
-  instance_template  = google_compute_instance_template.default.id
+  instance_template  = google_compute_instance_template.default.name
   target_size        = 2
   zone               = var.zone
 
   version {
-    instance_template = google_compute_instance_template.clinic_template.id
+    name              = "clinic-version"
+    instance_template = google_compute_instance_template.clinic_template.self_link
   }
 }
 
