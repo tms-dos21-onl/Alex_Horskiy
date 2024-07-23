@@ -1,4 +1,4 @@
-project = "protean-smile-405007"
+project = "my-project-dos21"
 region  = "us-central1"
 
 clinic_portal_snet  = "10.0.0.0/24"

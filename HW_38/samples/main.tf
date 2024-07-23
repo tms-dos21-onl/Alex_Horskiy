@@ -50,7 +50,7 @@ resource "google_compute_firewall" "default" {
   name          = "lecture43-fw-allow-hc"
   direction     = "INGRESS"
   network       = google_compute_network.main.id
-  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"] #My IP
   allow {
     protocol = "tcp"
   }
@@ -61,7 +61,7 @@ resource "google_compute_firewall" "allow_iap" {
   name          = "lecture43-fw-allow-iap"
   direction     = "INGRESS"
   network       = google_compute_network.main.id
-  source_ranges = ["35.235.240.0/20"]
+  source_ranges = ["35.235.240.0/20"] #My IP
   allow {
     protocol = "tcp"
     ports    = [22]
