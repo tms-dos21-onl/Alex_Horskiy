@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nicereplicaset
+  labels:
+    app: nginx
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx # which Pods ReplicaSet should watch for             <-----
+  template: #                                                               |
+    metadata: #                                                       SHOULD MATCH
+      labels: #                                                             |
+        app: nginx # which labels should be set to the generated Pods <-----
+    spec:
+      containers:
+        - name: web
+          image: nginx
+          ports:
+            - containerPort: 80
+              protocol: TCP
