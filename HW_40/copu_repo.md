@@ -49,9 +49,9 @@ git push origin main
 Просто повторяйте шаги 3 и 4 каждый раз, когда хотите забрать новые изменения.
 
 ```bash
-git clone URL_ЧУЖОГО_РЕПОЗИТОРИЯ
-cd имя_репозитория
-git remote add upstream URL_ЧУЖОГО_РЕПОЗИТОРИЯ
+git clone git@github.com:tms-dos21-onl/_sandbox.git
+cd _sandbox.git
+git remote add upstream git@github.com:tms-dos21-onl/_sandbox.git
 git fetch upstream
 git checkout main
 git merge upstream/main
