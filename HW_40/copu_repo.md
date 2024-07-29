@@ -47,3 +47,13 @@ git push origin main
 Вот и все! Теперь ваш локальный репозиторий будет синхронизирован с оригинальным, 
 и вы сможете получать обновления из него в будущем. 
 Просто повторяйте шаги 3 и 4 каждый раз, когда хотите забрать новые изменения.
+
+```bash
+git clone URL_ЧУЖОГО_РЕПОЗИТОРИЯ
+cd имя_репозитория
+git remote add upstream URL_ЧУЖОГО_РЕПОЗИТОРИЯ
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
+```
