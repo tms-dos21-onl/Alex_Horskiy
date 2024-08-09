@@ -1,0 +1,8 @@
+---
+roles:
+  - name: geerlingguy.apache
+  - name: geerlingguy.php
+  - name: geerlingguy.mysql
+
+collections:
+  - name: community.zabbix
