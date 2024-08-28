@@ -1,0 +1,35 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE/myapp-backend:latest -f Dockerfile .
+    - docker build -t $CI_REGISTRY_IMAGE/myapp-frontend:latest -f Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE/myapp-backend:latest
+    - docker push $CI_REGISTRY_IMAGE/myapp-frontend:latest
+
+test:
+  stage: test
+  script:
+    - echo "Running tests"
+    - ./scripts/test.sh
+
+deploy:
+  stage: deploy
+  environment: production
+  script:
+    - ./scripts/apply_infrastructure.sh
+    - ./scripts/deploy.sh

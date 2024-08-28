@@ -1,0 +1,14 @@
+---
+- name: Deploy Docker Containers
+  hosts: all
+  become: true
+  tasks:
+    - name: Pull Docker images
+      ansible.builtin.shell: |
+        docker pull $CI_REGISTRY_IMAGE/myapp-backend:latest
+        docker pull $CI_REGISTRY_IMAGE/myapp-frontend:latest
+
+    - name: Run Docker Compose
+      ansible.builtin.shell: |
+        docker-compose down
+        docker-compose up -d

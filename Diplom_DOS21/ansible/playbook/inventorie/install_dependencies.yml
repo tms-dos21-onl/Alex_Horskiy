@@ -1,0 +1,13 @@
+---
+- name: Install dependencies
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+    - name: Install Docker Compose
+      ansible.builtin.apt:
+        name: docker-compose
+        state: present
