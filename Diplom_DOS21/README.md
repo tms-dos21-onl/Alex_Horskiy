@@ -1,5 +1,6 @@
 Project Diplom DOS21
 
+```bash
 Diplom_DOS21/
 ├── ansible/
 │   ├── playbooks/
@@ -26,3 +27,5 @@ Diplom_DOS21/
     ├── test.sh
     ├── apply_infrastructure.sh
     └── deploy.sh
+
+```
